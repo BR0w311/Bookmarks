@@ -1,0 +1,128 @@
+import React, { useState } from "react";
+
+const BookmarksApp = () => {
+  const [bookmarks, setBookmarks] = useState([
+    { name: "Google Docs", url: "https://docs.google.com/", favorite: false },
+    { name: "Google Sheets", url: "https://sheets.google.com/", favorite: false },
+    { name: "Google Slides", url: "https://slides.google.com/", favorite: false },
+    { name: "Google Calendar", url: "https://calendar.google.com/", favorite: false },
+    { name: "Gmail", url: "https://mail.google.com/", favorite: false },
+    { name: "Google Drive", url: "https://drive.google.com/", favorite: false },
+    { name: "Google Search", url: "https://www.google.com/", favorite: false },
+    { name: "Google Maps", url: "https://maps.google.com/", favorite: false },
+  ]);
+
+  const [newBookmark, setNewBookmark] = useState({ name: "", url: "" });
+
+  const addBookmark = () => {
+    if (newBookmark.name && newBookmark.url) {
+      setBookmarks([...bookmarks, { ...newBookmark, favorite: false }]);
+      setNewBookmark({ name: "", url: "" });
+    }
+  };
+
+  const toggleFavorite = (index) => {
+    const updatedBookmarks = bookmarks.map((bookmark, i) =>
+      i === index ? { ...bookmark, favorite: !bookmark.favorite } : bookmark
+    );
+    setBookmarks(updatedBookmarks);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-4">
+      <header className="text-center mb-6">
+        <h1 className="text-2xl font-bold">Bookmarks App</h1>
+      </header>
+
+      <div className="max-w-md mx-auto mb-6">
+        <h2 className="text-lg font-semibold mb-2">Add a Bookmark</h2>
+        <input
+          type="text"
+          placeholder="Bookmark Name"
+          value={newBookmark.name}
+          onChange={(e) => setNewBookmark({ ...newBookmark, name: e.target.value })}
+          className="block w-full p-2 mb-2 border rounded"
+        />
+        <input
+          type="url"
+          placeholder="Bookmark URL"
+          value={newBookmark.url}
+          onChange={(e) => setNewBookmark({ ...newBookmark, url: e.target.value })}
+          className="block w-full p-2 mb-4 border rounded"
+        />
+        <button
+          onClick={addBookmark}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Add Bookmark
+        </button>
+      </div>
+
+      <div className="max-w-md mx-auto mb-6">
+        <h2 className="text-lg font-semibold mb-4">Bookmarks</h2>
+        <ul className="space-y-4">
+          {bookmarks.map((bookmark, index) => (
+            <li
+              key={index}
+              className="flex items-center justify-between p-4 bg-white rounded shadow"
+            >
+              <div className="flex items-center">
+                <img
+                  src={`https://www.google.com/s2/favicons?domain=${new URL(bookmark.url).hostname}`}
+                  alt="favicon"
+                  className="w-6 h-6 mr-4"
+                />
+                <a
+                  href={bookmark.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline"
+                >
+                  {bookmark.name}
+                </a>
+              </div>
+              <button
+                onClick={() => toggleFavorite(index)}
+                className={`text-lg ${bookmark.favorite ? "text-yellow-500" : "text-gray-400"}`}
+              >
+                ★
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="max-w-md mx-auto mb-6">
+        <h2 className="text-lg font-semibold mb-4">Favorites</h2>
+        <ul className="space-y-4">
+          {bookmarks
+            .filter((bookmark) => bookmark.favorite)
+            .map((bookmark, index) => (
+              <li
+                key={index}
+                className="flex items-center justify-between p-4 bg-yellow-100 rounded shadow"
+              >
+                <div className="flex items-center">
+                  <img
+                    src={`https://www.google.com/s2/favicons?domain=${new URL(bookmark.url).hostname}`}
+                    alt="favicon"
+                    className="w-6 h-6 mr-4"
+                  />
+                  <a
+                    href={bookmark.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline"
+                  >
+                    {bookmark.name}
+                  </a>
+                </div>
+              </li>
+            ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default BookmarksApp;
